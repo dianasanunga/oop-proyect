@@ -31,6 +31,6 @@ public class Buyer {
     private Date registrationDate;
     private String address;
     City idCity;
-    private String phone;
+    private String phoneNumber;
 
 }
