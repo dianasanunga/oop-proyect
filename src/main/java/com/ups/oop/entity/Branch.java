@@ -15,15 +15,13 @@ import org.springframework.data.annotation.Id;
 @Getter
 @Setter
 
-public class Seller {
+public class Branch {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;
-    private String idSeller;
     private String name;
-    private String lastname;
-    private Integer age;
-    private String email;
+    private String address;
+    private String employeeNumber;
     private String phoneNumber;
 
 }
