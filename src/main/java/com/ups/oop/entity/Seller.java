@@ -3,11 +3,18 @@ package com.ups.oop.entity;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
+import jakarta.persistence.JoinColumn;
+import jakarta.persistence.ManyToOne;
+import jakarta.persistence.OneToMany;
+import jakarta.persistence.Id;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
-import org.springframework.data.annotation.Id;
+
+
+import java.util.ArrayList;
+import java.util.List;
 
 @Entity
 @NoArgsConstructor
@@ -23,7 +30,13 @@ public class Seller {
     private String name;
     private String lastname;
     private Integer age;
+    @ManyToOne
+    @JoinColumn(name = "city", nullable = true)
+    private City city;
     private String email;
     private String phoneNumber;
+
+    @OneToMany(mappedBy = "seller")
+    private List<Invoice> invoices = new ArrayList<>();
 
 }

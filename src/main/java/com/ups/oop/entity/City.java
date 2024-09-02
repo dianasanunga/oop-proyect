@@ -1,14 +1,18 @@
 package com.ups.oop.entity;
 
-
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
+import jakarta.persistence.OneToMany;
+import jakarta.persistence.Id;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
-import org.springframework.data.annotation.Id;
+
+
+import java.util.ArrayList;
+import java.util.List;
 
 @Entity
 @NoArgsConstructor
@@ -23,5 +27,11 @@ public class City {
         private String idCity;
         private String name;
         private String description;
+
+        @OneToMany(mappedBy = "city")
+        private List<Buyer> buyers = new ArrayList<>();
+
+        @OneToMany(mappedBy = "city")
+        private List<Seller> sellers = new ArrayList<>();
 
 }
