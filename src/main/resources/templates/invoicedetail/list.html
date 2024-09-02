@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html lang="en" xmlns:th="http://www.thymeleaf.org">
 <head>
-    <title>People List</title>
+    <title>Invoice Detail List</title>
     <style>
         table, th, td{
         border: 1px solid black;
@@ -33,18 +33,28 @@
     </style>
 </head>
 <body>
-<h2>List of People</h2>
+<h2>List of Invoice Detail</h2>
 <br>
 <table>
     <tr>
-        <th>Id</th>
-        <th>Name</th>
-        <th>Age</th>
+        <th>IdInvoiceDetail</th>
+        <th>IdInvoice</th>
+        <th>Product</th>
+        <th>UnitPrice</th>
+        <th>Quantity</th>
+        <th>Total</th>
     </tr>
-    <tr th:each="per: ${people}">
-        <th th:text="${per.id}"></th>
-        <th th:text="${per.name}"></th>
-        <th th:text="${per.age}"></th>
+    <tr th:each="id: ${invoiceDetail}">
+        <th th:text="${id.idInvoiceDetail}"></th>
+        <th th:text="${id.idInvoice}"></th>
+        <th th:text="${id.product}"></th>
+        <th th:text="${id.unitPrice}"></th>
+        <th th:text="${id.quantity}"></th>
+        <th th:text="${id.total}"></th>
+
+
+
+
     </tr>
     </table>
 
