@@ -30,6 +30,7 @@ public class Seller {
     private String name;
     private String lastname;
     private Integer age;
+    private String address;
     @ManyToOne
     @JoinColumn(name = "city", nullable = true)
     private City city;

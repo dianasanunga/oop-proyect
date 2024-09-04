@@ -27,69 +27,76 @@ public class BuyerService {
         if (buyerOptional.isPresent()) {
             String errorMessage = "buyer with id " + buyerDTO.getBuyerId() + " already exists";
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(errorMessage);
-
         } else {
-            if (buyerDTO.getName().contains(" ")) {
-                Buyer buyerRecord = new Buyer();
-                buyerRecord.setBuyerId(buyerId);
-                String[] nameStrings = buyerDTO.getName().split(" ");
-                String name = nameStrings[0];
-                String lastname = nameStrings[1];
-                buyerRecord.setName(name);
-                buyerRecord.setLastname(lastname);
-                buyerRecord.setAge(Integer.valueOf(buyerDTO.getAge()));
-                buyerRepository.save(buyerRecord);
-                return ResponseEntity.status(HttpStatus.OK).body(buyerDTO);
 
-            } else {
-
-                return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("buyer name must contain two strings separated by a whitespace");
-            }
+            Buyer buyerRecord = new Buyer();
+            buyerRecord.setBuyerId(buyerId);
+            buyerRecord.setName(buyerDTO.getName());
+            buyerRecord.setLastname(buyerDTO.getLastname());
+            buyerRecord.setAge(Integer.valueOf(buyerDTO.getAge()));
+            buyerRepository.save(buyerRecord);
+            return ResponseEntity.status(HttpStatus.OK).body(buyerDTO);
 
         }
     }
-        public List<BuyerDTO>getBuyer() {
-            Iterable<Buyer> buyerIterable = buyerRepository.findAll();
-            List<BuyerDTO> buyerList = new ArrayList<>();
 
-            for (Buyer b : buyerIterable) {
-                BuyerDTO buyer = new BuyerDTO(b.getBuyerId(), b.getRegistrationDate().toString(), b.getName(), b.getLastname(),
-                        b.getAge().toString(), b.getCity().getName(), b.getAddress(), b.getPhoneNumber(), b.getEmail());
-                buyerList.add(buyer);
-
-            }
-
-            return buyerList;
-
-        }
-    public ResponseEntity getAllBuyer(){
-        Iterable<Buyer>buyerIterable = buyerRepository.findAll();
+    public ResponseEntity getAllBuyer() {
+        Iterable<Buyer> buyerIterable = buyerRepository.findAll();
         List<BuyerDTO> buyerList = new ArrayList<>();
 
-        for(Buyer b: buyerIterable) {
+        for (Buyer b : buyerIterable) {
             BuyerDTO buyer = new BuyerDTO(b.getBuyerId(), b.getRegistrationDate().toString(), b.getName(), b.getLastname(),
                     b.getAge().toString(), b.getCity().getName(), b.getAddress(), b.getPhoneNumber(), b.getEmail());
             buyerList.add(buyer);
 
 
         }
-        if(buyerList.isEmpty()){
+        if (buyerList.isEmpty()) {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Buyer List not found");
         }
         return ResponseEntity.status(HttpStatus.OK).body(buyerList);
     }
 
-    public ResponseEntity getBuyerById(String personId){
-        Optional<Person> personOptional = personRepository.findByPersonId(personId);
+    public ResponseEntity getBuyerById(String buyerId) {
+        Optional<Buyer> buyerOptional = buyerRepository.findByBuyerId(buyerId);
 
-        if(personOptional.isPresent()){
-            Person personFound = personOptional.get();
-            PersonDTO person = new PersonDTO(personFound.getPersonId(),
-                    personFound.getName() + "-" + personFound.getLastname(),
-                    personFound.getAge());
-            return ResponseEntity.status(HttpStatus.OK).body(person);
+        if (buyerOptional.isPresent()) {
+            Buyer b = buyerOptional.get();
+            BuyerDTO buyer = new BuyerDTO(b.getBuyerId(), b.getRegistrationDate().toString(), b.getName(), b.getLastname(),
+                    b.getAge().toString(), b.getCity().getName(), b.getAddress(), b.getPhoneNumber(), b.getEmail());
+
+            return ResponseEntity.status(HttpStatus.OK).body(buyer);
         } else {
+            String errorMessage = "buyer with id " + buyerId + " not found.";
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(errorMessage);
+        }
 
     }
 
+    public ResponseEntity updateBuyer(BuyerDTO buyerDTO){
+        String buyerId = buyerDTO.getBuyerId();
+        Optional<Buyer> buyerOptional = buyerRepository.findByBuyerId(buyerId);
+        if (buyerOptional.isPresent()){
+            Buyer buyer = buyerOptional.get();
+            buyer.setBuyerId(buyerId);
+            buyer.setName(buyerDTO.getName());
+            buyer.setLastname(buyerDTO.getLastname());
+            buyer.setAge(Integer.valueOf(buyerDTO.getAge()));
+            buyerRepository.save(buyer);
+            return ResponseEntity.status(HttpStatus.OK).body(buyerDTO);
+        }else{
+            String errorMessage = "buyer with id " + buyerDTO.getBuyerId() + " already exists";
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(errorMessage);
+        }
+    }
+    public ResponseEntity deleteBuyerById(String id){
+        String message = "Buyer with id " + id;
+        Optional<Buyer> buyerOptional = buyerRepository.findByBuyerId(id);
+        if (buyerOptional.isPresent()) {
+            buyerRepository.delete((buyerOptional.get()));
+            return ResponseEntity.status(HttpStatus.OK).body(message + " removed successufuly");
+        }else{
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(message + " not found");}
+
+    }
 }
